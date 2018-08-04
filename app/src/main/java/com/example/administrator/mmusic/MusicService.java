@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MusicService extends Service {
+    private final int LAST_FLAG = 0;
+    private final int NEXT_FLAG = 1;
     public MediaPlayer mediaPlayer = new MediaPlayer();;
     public MyBinder binder = new MyBinder();
     List<?> music_list;
@@ -48,15 +50,7 @@ public class MusicService extends Service {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer arg0) {
-                    mediaPlayer.reset();
-                    try {
-                        current_music_name = randomPlay();
-                        mediaPlayer.setDataSource(current_music_name);
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    play_with_random();
                 }
             });
         }catch (Exception e){
@@ -92,6 +86,12 @@ public class MusicService extends Service {
         public String getCurrentMusicName(){
             return current_music_name;
         }
+        public void playNext(){
+            switch_music(NEXT_FLAG);
+        }
+        public void playLast(){
+            switch_music(LAST_FLAG);
+        }
     }
 
     @Override
@@ -108,5 +108,25 @@ public class MusicService extends Service {
     String randomPlay(){
         int music_position = (int)(Math.random() * music_list.size());
         return ((MusicPOJO)(music_list.get(music_position))).getPath();
+    }
+
+    public void play_with_random(){
+        mediaPlayer.reset();
+        try {
+            current_music_name = randomPlay();
+            mediaPlayer.setDataSource(current_music_name);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void switch_music(int direction){
+        if(direction == LAST_FLAG){
+            play_with_random();
+        }else {
+            play_with_random();
+        }
     }
 }

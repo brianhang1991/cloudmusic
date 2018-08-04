@@ -13,12 +13,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
 public class MusicPlay extends AppCompatActivity {
     private ImageView cover_image_view;
-    private Button play_button;
+    private ImageButton play_button;
+    private ImageButton last_button;
+    private ImageButton next_button;
     private SeekBar seekBar;
     private boolean isChanging;
     private MusicService.MyBinder binder = null;
@@ -41,25 +44,43 @@ public class MusicPlay extends AppCompatActivity {
         Bundle bundle = intent_from_main.getBundleExtra("play");
         binder = (MusicService.MyBinder) bundle.getBinder("play");
         cover_image_view = (ImageView)findViewById(R.id.cover_image);
-        play_button = (Button)findViewById(R.id.play_button);
+        play_button = (ImageButton)findViewById(R.id.play_button);
+        last_button = (ImageButton)findViewById(R.id.last_button);
+        next_button = (ImageButton)findViewById(R.id.next_button);
         seekBar = (SeekBar)findViewById(R.id.seekbar);
 //        seekBar.setOnSeekBarChangeListener(new MySeekbar());
         if(binder.isPlay()){
-            play_button.setText("stop");
+//            play_button.setText("stop");
+            play_button.setBackgroundResource(R.mipmap.stop);
         }else {
-            play_button.setText("start");
+            play_button.setBackgroundResource(R.mipmap.play);
+//            play_button.setText("start");
         }
 
         play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(play_button.getText().toString().equals("play")){
+                if(!binder.isPlay()){
                     binder.play();
-                    play_button.setText("stop");
+                    play_button.setBackgroundResource(R.mipmap.stop);
                 }else {
                     binder.stop();
-                    play_button.setText("play");
+                    play_button.setBackgroundResource(R.mipmap.play);
                 }
+            }
+        });
+
+        last_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binder.playLast();
+            }
+        });
+
+        next_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binder.playLast();
             }
         });
         seekbarhandler = new MyHandler();

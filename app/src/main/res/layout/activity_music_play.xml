@@ -22,10 +22,29 @@
         android:layout_weight="2"
         />
 
-    <Button
-        android:id="@+id/play_button"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="PLAY"
-        android:layout_weight="1"/>
+        >
+        <ImageButton
+            android:id="@+id/last_button"
+            android:layout_width="10dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/last"
+            android:layout_weight="1"
+            />
+        <ImageButton
+            android:id="@+id/play_button"
+            android:layout_width="10dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/play"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:id="@+id/next_button"
+            android:layout_width="10dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/next"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
 </LinearLayout>
