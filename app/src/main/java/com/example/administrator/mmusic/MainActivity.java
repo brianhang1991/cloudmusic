@@ -45,8 +45,11 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 path = getPathByName(list_name.get(i));
                 binder.setData(path);
                 binder.setAllMusic(list_music_pojo);
-//                startService(intent_service);
+                startService(intent_service);
                 Intent intent = new Intent(MainActivity.this,MusicPlay.class);
+                Bundle bundle = new Bundle();
+                bundle.putBinder("play",binder);
+                intent.putExtra("play",bundle);
                 startActivity(intent);
             }
         });
