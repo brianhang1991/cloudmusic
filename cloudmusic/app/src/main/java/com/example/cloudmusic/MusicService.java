@@ -2,9 +2,13 @@ package com.example.cloudmusic;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+
+import com.example.cloudmusic.contant.ServerConstant;
 
 import java.util.List;
 
@@ -29,9 +33,23 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         try {
-            mediaPlayer = MediaPlayer.create(this, resId);
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .build());
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+//            mediaPlayer = MediaPlayer.create(this, resId);
 //            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
+
             mediaPlayer.prepare();
+
             mediaPlayer.setLooping(true);
 
         }catch (Exception e){
@@ -43,10 +61,26 @@ public class MusicService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             mediaPlayer.reset();
-            mediaPlayer = MediaPlayer.create(this, resId);
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .build());
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+//            mediaPlayer = MediaPlayer.create(this, resId);
 //            mediaPlayer.setDataSource(path);
+
+
+            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
+
             current_music_name = path;
             mediaPlayer.prepare();
+
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -118,10 +152,26 @@ public class MusicService extends Service {
     public void play_with_random(){
         mediaPlayer.reset();
         try {
+
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .build());
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+
             current_music_name = randomPlay();
-            mediaPlayer = MediaPlayer.create(this, resId);
+//            mediaPlayer = MediaPlayer.create(this, resId);
 //            mediaPlayer.setDataSource(current_music_name);
+            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
+
             mediaPlayer.prepare();
+
             mediaPlayer.start();
         }catch (Exception e){
             e.printStackTrace();
