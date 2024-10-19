@@ -1,4 +1,4 @@
-package com.example.cloudmusic;
+package com.example.cloudmusic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +12,18 @@ import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MusicPlay extends AppCompatActivity {
+import com.example.cloudmusic.service.MusicService;
+import com.example.cloudmusic.R;
+
+public class MusicPlayActivity extends AppCompatActivity {
+
     private ImageView cover_image_view;
     private ImageButton play_button;
     private ImageButton last_button;
     private ImageButton next_button;
     private SeekBar seekBar;
     private boolean isChanging;
-    private MusicService.MyBinder binder = null;
+    private MusicService.PlayBinder binder = null;
     Intent intent_from_main = null;
     private int position;
     public Handler seekbarhandler=null;
@@ -28,16 +32,18 @@ public class MusicPlay extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
 
         init();
     }
 
+    // init activity
     void init(){
         intent_from_main = getIntent();
         Bundle bundle = intent_from_main.getBundleExtra("play");
-        binder = (MusicService.MyBinder) bundle.getBinder("play");
+        binder = (MusicService.PlayBinder) bundle.getBinder("play");
         cover_image_view = (ImageView)findViewById(R.id.cover_image);
         play_button = (ImageButton)findViewById(R.id.play_button);
         last_button = (ImageButton)findViewById(R.id.last_button);
@@ -82,6 +88,7 @@ public class MusicPlay extends AppCompatActivity {
         seekbarthread = new SeekbarThread();
         seekbarthread.start();
     }
+
     //自定义进度条，设置进度条监听
     class MySeekbar implements SeekBar.OnSeekBarChangeListener {
         @Override
@@ -99,6 +106,7 @@ public class MusicPlay extends AppCompatActivity {
             isChanging=false;
         }
     }
+
     //更新进度条线程
     public class SeekbarThread extends Thread {
         @Override
@@ -129,6 +137,7 @@ public class MusicPlay extends AppCompatActivity {
             }
         }
     }
+
     //更新进度条的Handler
     class MyHandler extends Handler{
         @Override

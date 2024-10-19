@@ -1,4 +1,4 @@
-package com.example.cloudmusic;
+package com.example.cloudmusic.service;
 
 import com.example.cloudmusic.contant.ServerConstant;
 

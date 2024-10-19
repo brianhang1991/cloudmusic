@@ -1,4 +1,4 @@
-package com.example.cloudmusic;
+package com.example.cloudmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,54 +9,35 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.example.cloudmusic.contant.ServerConstant;
+import com.example.cloudmusic.pojo.Music;
 
 import java.util.List;
 
 public class MusicService extends Service {
+
     private final int LAST_FLAG = 0;
     private final int NEXT_FLAG = 1;
-    public MediaPlayer mediaPlayer = new MediaPlayer();;
-    public MyBinder binder = new MyBinder();
-    List<?> music_list;
+    public MediaPlayer mediaPlayer = new MediaPlayer();
+    private final PlayBinder binder = new PlayBinder();
+
+    List<?> musicList;
     String path;
     int resId;
-    String record_path;
-    String current_music_name;
-    public MusicService() {
-    }
+    String currentMusicName;
+
+    public MusicService() {}
 
     @Override
     public IBinder onBind(Intent intent) {
-        return  new MyBinder();
+        return binder;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        try {
-            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-                    .build());
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                }
-            });
-//            mediaPlayer = MediaPlayer.create(this, resId);
-//            mediaPlayer.setDataSource(path);
-            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
-
-            mediaPlayer.prepare();
-
-            mediaPlayer.setLooping(true);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
-    //startService启动方法
+
+    // start play
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
@@ -72,40 +53,45 @@ public class MusicService extends Service {
                     mp.start();
                 }
             });
+
 //            mediaPlayer = MediaPlayer.create(this, resId);
 //            mediaPlayer.setDataSource(path);
 
 
-            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
+            mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc() + "/?path=" + path);
 
-            current_music_name = path;
-            mediaPlayer.prepare();
+            currentMusicName = path;
 
+            mediaPlayer.prepareAsync();
             mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer arg0) {
-                    play_with_random();
-                }
-            });
+//            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer arg0) {
+//                    play_with_random();
+//                }
+//            });
         }catch (Exception e){
             e.printStackTrace();
         }
         return super.onStartCommand(intent, flags, startId);
     }
-    //Binder类的自定义
-    public class MyBinder extends Binder{
-        MusicService getService(){
+
+    // binder for play music
+    public class PlayBinder extends Binder{
+        public MusicService getService(){
             return MusicService.this;
         }
         public void setData(String data){
             MusicService.this.path = data;
         }
+        public void setOnlinePath(String path) {
+            MusicService.this.path = path;
+        }
         public void setData(int data){
             MusicService.this.resId = data;
         }
-        public void setAllMusic(List<?> music_list){
-            MusicService.this.music_list = music_list;
+        public void setAllMusic(List<?> musicList){
+            MusicService.this.musicList = musicList;
         }
         public boolean isPlay(){
             return mediaPlayer.isPlaying();
@@ -123,7 +109,7 @@ public class MusicService extends Service {
             return mediaPlayer.getDuration();
         }
         public String getCurrentMusicName(){
-            return current_music_name;
+            return currentMusicName;
         }
         public void playNext(){
             switch_music(NEXT_FLAG);
@@ -143,10 +129,10 @@ public class MusicService extends Service {
         return super.onUnbind(intent);
     }
 
-    //获取随机播放列表中的音乐路径
+    // get music path under random
     String randomPlay(){
-        int music_position = (int)(Math.random() * music_list.size());
-        return ((MusicPOJO)(music_list.get(music_position))).getPath();
+        int music_position = (int)(Math.random() * musicList.size());
+        return ((Music)(musicList.get(music_position))).getPath();
     }
 
     public void play_with_random(){
@@ -165,9 +151,9 @@ public class MusicService extends Service {
                 }
             });
 
-            current_music_name = randomPlay();
+            currentMusicName = randomPlay();
 //            mediaPlayer = MediaPlayer.create(this, resId);
-//            mediaPlayer.setDataSource(current_music_name);
+//            mediaPlayer.setDataSource(currentMusicName);
             mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc());
 
             mediaPlayer.prepare();

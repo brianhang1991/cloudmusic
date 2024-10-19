@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.administrator.mmusic">
+    package="com.example.cloudmusic">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -25,11 +25,11 @@
         </activity>
 
         <service
-            android:name=".MusicService"
+            android:name=".service.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MusicPlay"></activity>
+        <activity android:name=".activity.MusicPlayActivity"></activity>
     </application>
 
 </manifest>

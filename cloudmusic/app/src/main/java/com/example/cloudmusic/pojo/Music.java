@@ -1,9 +1,9 @@
-package com.example.cloudmusic;
+package com.example.cloudmusic.pojo;
 
-public class MusicPOJO {
+public class Music {
     private String name;
     private String path;
-    private int resId;
+    private int id;
 
     public String getName() {
         return name;
@@ -22,10 +22,10 @@ public class MusicPOJO {
     }
 
     public int getResId() {
-        return resId;
+        return id;
     }
 
     public void setResId(int resId) {
-        this.resId = resId;
+        this.id = id;
     }
 }
