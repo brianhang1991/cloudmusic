@@ -17,8 +17,9 @@ public class MusicService extends Service {
 
     private final int LAST_FLAG = 0;
     private final int NEXT_FLAG = 1;
+
     public MediaPlayer mediaPlayer = new MediaPlayer();
-    private final PlayBinder binder = new PlayBinder();
+    public PlayBinder binder = new PlayBinder();
 
     List<?> musicList;
     String path;
@@ -40,6 +41,7 @@ public class MusicService extends Service {
     // start play
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         try {
             mediaPlayer.reset();
             mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
@@ -57,7 +59,6 @@ public class MusicService extends Service {
 //            mediaPlayer = MediaPlayer.create(this, resId);
 //            mediaPlayer.setDataSource(path);
 
-
             mediaPlayer.setDataSource(ServerConstant.URL_LOAD_ONLINE_MUSIC.getDesc() + "/?path=" + path);
 
             currentMusicName = path;
@@ -67,12 +68,13 @@ public class MusicService extends Service {
 //            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 //                @Override
 //                public void onCompletion(MediaPlayer arg0) {
-//                    play_with_random();
+//                    playRandom();
 //                }
 //            });
         }catch (Exception e){
             e.printStackTrace();
         }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -105,6 +107,9 @@ public class MusicService extends Service {
         public int getCurrentProgess(){
             return mediaPlayer.getCurrentPosition();
         }
+        public void setProgess(int progess) {
+            mediaPlayer.seekTo(progess);
+        }
         public int getDuration(){
             return mediaPlayer.getDuration();
         }
@@ -112,10 +117,10 @@ public class MusicService extends Service {
             return currentMusicName;
         }
         public void playNext(){
-            switch_music(NEXT_FLAG);
+            switchMusic(NEXT_FLAG);
         }
         public void playLast(){
-            switch_music(LAST_FLAG);
+            switchMusic(LAST_FLAG);
         }
     }
 
@@ -131,11 +136,11 @@ public class MusicService extends Service {
 
     // get music path under random
     String randomPlay(){
-        int music_position = (int)(Math.random() * musicList.size());
-        return ((Music)(musicList.get(music_position))).getPath();
+        int musicPosition = (int)(Math.random() * musicList.size());
+        return ((Music)(musicList.get(musicPosition))).getPath();
     }
 
-    public void play_with_random(){
+    public void playRandom(){
         mediaPlayer.reset();
         try {
 
@@ -164,11 +169,11 @@ public class MusicService extends Service {
         }
     }
 
-    public void switch_music(int direction){
+    public void switchMusic(int direction){
         if(direction == LAST_FLAG){
-            play_with_random();
+            playRandom();
         }else {
-            play_with_random();
+            playRandom();
         }
     }
 }
