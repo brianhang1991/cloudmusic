@@ -85,7 +85,6 @@ public class MusicPlayActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
                 seekBar.setProgress(progress);
-
             }
 
             @Override
@@ -96,11 +95,9 @@ public class MusicPlayActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 isChanging=false;
-
-
                 Message message = new Message();
                 message.what = 3;
-                seekbarhandler.handleMessage(message);
+                seekbarhandler.sendMessage(message);
             }
         });
 
@@ -125,7 +122,7 @@ public class MusicPlayActivity extends AppCompatActivity {
                         musicName = binder.getCurrentMusicName();
                         Message message01 = new Message();
                         message01.what = 2;
-                        seekbarhandler.handleMessage(message01);
+                        seekbarhandler.sendMessage(message01);
                     }
                 }
 
